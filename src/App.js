@@ -1,23 +1,45 @@
-import logo from './logo.svg';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from "./shared/firebase";
+
 import './App.css';
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+
+import Home from './pages/Home';
+import SignUp from './pages/SignUp';
+import Login from './pages/Login';
+import PostAdd from './pages/PostAdd';
+
 
 function App() {
+
+  const [is_login, setIsLogin] = React.useState(false);
+
+  console.log(auth.currentUser);
+
+  const loginCheck = async (user) => {
+    if(user) {
+      setIsLogin(true);
+    }else{
+      setIsLogin(false);
+    }
+  }
+  React.useEffect(() => {
+    onAuthStateChanged(auth, loginCheck);
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Routes>
+        
+        <Route path="/signup" element={<SignUp />} />
+        {is_login? (
+          <Route path="/" element={<Home />} /> 
+        ) : (
+          <Route path="/" element={<Login />} />
+        )}
+        <Route path="/post_add" element={<PostAdd />} />
+      </Routes>
     </div>
   );
 }
