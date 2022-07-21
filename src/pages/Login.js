@@ -89,7 +89,6 @@ const Login = () => {
               id="password"
               autoComplete="current-password"
             />
-          
             <Button onClick={log_in}
               type="submit"
               fullWidth
